@@ -13,14 +13,30 @@ site_configuration = {
           'name': 'batch',
           'descr': 'Iris Skylake compute nodes via batch partition',
           'scheduler': 'slurm',
-          'launcher': 'srun', # Use srun to launch MPI jobs
-          'access': ['--partition=batch', '-C skylake'],
-          'environs': ['foss-2023b'], #software environments usable on these nodes
+          'launcher': 'srun',
+          'access': ['--partition=batch', '--qos=normal', '-C skylake', '--time=0-00:05:00'],
+          'environs': ['foss-2023b'],
           'max_jobs': 8, # 8? probably should be a diff number
         },
       ]
     },
-    # We can add the 'aion' system later
+    {
+      'name': 'aion',
+      'descr': 'Aion cluster',
+      'hostnames': [r'aion-[0-9]{4}'],
+      'modules_system': 'lmod',
+      'partitions': [
+        {
+          'name': 'batch',
+          'descr': 'Aion compute nodes',
+          'scheduler': 'slurm',
+          'launcher': 'srun',
+          'access': ['--partition=batch', '--qos=normal', '--time=0-00:10:00'],
+          'environs': ['foss-2023b'],
+          'max_jobs': 8,
+        }
+      ]
+    }
   ],
 
   'environments': [
