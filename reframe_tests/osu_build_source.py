@@ -1,3 +1,11 @@
+
+
+# # TODO:
+# - configure warmup runs
+# - set references for each test
+# - FIX: INCORRECT BINDINGS (OsuDifferentSockets, OsuSameSocketDifferentNuma)
+
+
 import reframe as rfm
 import reframe.utility.sanity as sn
 import os
@@ -33,7 +41,7 @@ class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
     # message_size will be set based on the specific benchmark (latency/bw)
     message_size = variable(int, loggable=True)
 
-    valid_systems = ['*'] 
+    valid_systems = ['*']
     valid_prog_environs = ['*']
     num_tasks = 2
     num_tasks_per_node = 2
@@ -189,11 +197,34 @@ class OsuDifferentSockets(OsuBwLatencyBenchmarkBase):
     def set_mpi_binding(self):
          # These SLURM options are passed to srun
         self.job.launcher.options += [
-            '--cpu-bind=verbose,sockets',
+            '--ntasks-per-socket=1',
+            '--cpu-bind=verbose,cores',
             '--mem-bind=local',
-            '--ntasks-per-socket=1'
+            '--distribution=cyclic:cyclic'
         ]
 
         # self.env_vars['OMPI_MCA_rmaps_base_mapping_policy'] = 'socket'
         # self.env_vars['OMPI_MCA_hwloc_base_binding_policy'] = 'core'
+        self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
+
+
+
+# ============================================================================
+# Test Case: 2 processes are running on different nodes.
+# ============================================================================
+
+@rfm.simple_test
+class OsuDifferentNodes(OsuBwLatencyBenchmarkBase):
+    descr = 'OSU Pt2Pt: Same Node, Different Sockets'
+
+    num_tasks_per_node = 1
+
+    # --- MPI Binding ---
+    @run_before('run')
+    def set_mpi_binding(self):
+
+        self.job.launcher.options += [
+            '--nodes=2'
+        ]
+
         self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
