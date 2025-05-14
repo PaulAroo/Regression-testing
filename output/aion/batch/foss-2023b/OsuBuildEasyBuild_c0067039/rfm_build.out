@@ -1,0 +1,88 @@
+== Temporary log file in case of crash /tmp/eb-lbvrdgvn/easybuild-cs8if7k0.log
+== found valid index for /home/users/paromolaran/.local/easybuild/software/EasyBuild/5.0.0/easybuild/easyconfigs, so using it...
+== found valid index for /home/users/paromolaran/.local/easybuild/software/EasyBuild/5.0.0/easybuild/easyconfigs, so using it...
+== processing EasyBuild easyconfig /mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/OSU-Micro-Benchmarks-7.2-foss-2023b.eb
+== building and installing perf/OSU-Micro-Benchmarks/7.2-foss-2023b...
+  >> installation prefix: /mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/easybuild/software/OSU-Micro-Benchmarks/7.2-foss-2023b
+== fetching files and verifying checksums...
+  >> download succeeded: https://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-7.2.tar.gz
+  >> sources:
+  >> /mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/easybuild/o/OSU-Micro-Benchmarks/osu-micro-benchmarks-7.2.tar.gz [SHA256: 1a4e1f2aab0e65404b3414e23bd46616184b69b6231ce9313d9c630bd6e633c1]
+  >> download succeeded: https://git.savannah.gnu.org/cgit/config.git/plain/config.guess?id=28ea239c53a2d5d8800c472bc2452eaa16e37af2
+== ... (took 43 secs)
+== creating build dir, resetting environment...
+  >> build dir: /mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/easybuild/build/OSUMicroBenchmarks/7.2/foss-2023b
+== ... (took < 1 sec)
+== unpacking...
+  >> running shell command:
+	tar xzf /mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/easybuild/o/OSU-Micro-Benchmarks/osu-micro-benchmarks-7.2.tar.gz
+	[started at: 2025-05-12 22:26:37]
+	[working dir: /mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/easybuild/build/OSUMicroBenchmarks/7.2/foss-2023b]
+	[output and state saved to /tmp/eb-lbvrdgvn/run-shell-cmd-output/tar-9da3yuxg]
+  >> command completed: exit 0, ran in < 1s
+== ... (took < 1 sec)
+== patching...
+== ... (took < 1 sec)
+== preparing...
+  >> loading toolchain module: toolchain/foss/2023b
+  >> defining build environment for foss/2023b toolchain
+== ... (took < 1 sec)
+== configuring...
+  >> running shell command:
+	/mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/easybuild/generic/eb_v5.0.0/ConfigureMake/config.guess
+	[started at: 2025-05-12 22:26:38]
+	[working dir: /mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/easybuild/build/OSUMicroBenchmarks/7.2/foss-2023b/osu-micro-benchmarks-7.2]
+	[output and state saved to /tmp/eb-lbvrdgvn/run-shell-cmd-output/configguess-2j8d8uag]
+  >> command completed: exit 0, ran in < 1s
+  >> running shell command:
+	./configure --prefix=/mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/easybuild/software/OSU-Micro-Benchmarks/7.2-foss-2023b  --build=x86_64-pc-linux-gnu  --host=x86_64-pc-linux-gnu
+	[started at: 2025-05-12 22:26:38]
+	[working dir: /mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/easybuild/build/OSUMicroBenchmarks/7.2/foss-2023b/osu-micro-benchmarks-7.2]
+	[output and state saved to /tmp/eb-lbvrdgvn/run-shell-cmd-output/configure-wn1g7w_b]
+  >> command completed: exit 0, ran in 00h00m16s
+== ... (took 17 secs)
+== building...
+  >> running shell command:
+	make
+	[started at: 2025-05-12 22:26:55]
+	[working dir: /mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/easybuild/build/OSUMicroBenchmarks/7.2/foss-2023b/osu-micro-benchmarks-7.2]
+	[output and state saved to /tmp/eb-lbvrdgvn/run-shell-cmd-output/make-2loh0kdo]
+  >> command completed: exit 0, ran in 00h01m01s
+== ... (took 1 min 1 secs)
+== testing...
+== ... (took < 1 sec)
+== installing...
+  >> running shell command:
+	make install
+	[started at: 2025-05-12 22:27:57]
+	[working dir: /mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/easybuild/build/OSUMicroBenchmarks/7.2/foss-2023b/osu-micro-benchmarks-7.2]
+	[output and state saved to /tmp/eb-lbvrdgvn/run-shell-cmd-output/make-wecjrw3w]
+  >> command completed: exit 0, ran in 00h00m01s
+== ... (took 1 secs)
+== taking care of extensions...
+== ... (took < 1 sec)
+== restore after iterating...
+== ... (took < 1 sec)
+== postprocessing...
+== ... (took < 1 sec)
+== sanity checking...
+  >> (non-empty) directory 'libexec/osu-micro-benchmarks/mpi/collective' found: OK
+  >> (non-empty) directory 'libexec/osu-micro-benchmarks/mpi/one-sided' found: OK
+  >> (non-empty) directory 'libexec/osu-micro-benchmarks/mpi/pt2pt' found: OK
+  >> (non-empty) directory 'libexec/osu-micro-benchmarks/mpi/startup' found: OK
+  >> loading modules: perf/OSU-Micro-Benchmarks/7.2-foss-2023b...
+== ... (took 1 secs)
+== cleaning up...
+== ... (took < 1 sec)
+== creating module...
+  >> generating module file @ /mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/easybuild/modules/all/perf/OSU-Micro-Benchmarks/7.2-foss-2023b.lua
+== ... (took 1 secs)
+== permissions...
+== ... (took < 1 sec)
+== packaging...
+== ... (took < 1 sec)
+== COMPLETED: Installation ended successfully (took 2 mins 7 secs)
+== Results of the build can be found in the log file(s) /mnt/aiongpfs/users/paromolaran/project_playground/stage/aion/batch/foss-2023b/OsuBuildEasyBuild_c0067039/easybuild/software/OSU-Micro-Benchmarks/7.2-foss-2023b/easybuild/easybuild-OSU-Micro-Benchmarks-7.2-20250512.222800.log
+== Build succeeded for 1 out of 1
+== Temporary log file(s) /tmp/eb-lbvrdgvn/easybuild-cs8if7k0.log* have been removed.
+== Temporary directory /tmp/eb-lbvrdgvn has been removed.
