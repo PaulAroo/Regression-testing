@@ -1,7 +1,6 @@
 
 
 # # TODO:
-# - configure warmup runs
 # - set references for each test
 # - FIX: INCORRECT BINDINGS (OsuDifferentSockets, OsuSameSocketDifferentNuma)
 
@@ -49,7 +48,6 @@ class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
     exclusive_access = True
 
     # --- Parameter to select the specific pt2pt benchmark ---
-    # benchmark_info: tuple(executable_name_suffix, metric_name)
     benchmark_info = parameter([
         ('osu_bw', 'bandwidth'),
         ('osu_latency', 'latency')
@@ -66,8 +64,10 @@ class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
                                        self.osu_binaries.build_prefix, 'c',
                                        'mpi', 'pt2pt', 'standard', exec_name)
 
-        if not os.path.exists(self.executable):
-            raise RuntimeError(f"Executable not found at: {self.executable}")
+        # export relevant OMPI MCA vars
+        self.env_vars = {
+            'OMPI_MCA_hwloc_base_report_bindings': '1'
+        }
 
     @run_before('setup')
     def setup_executable_options_and_perf(self):
@@ -83,7 +83,7 @@ class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
         else:
             raise ValueError(f'Unknown benchmark metric: {bench_metric}')
 
-        self.executable_opts = ['-m', f'{self.message_size}:{self.message_size}']
+        self.executable_opts = ['-m', f'{self.message_size}:{self.message_size}', '-x', '10', '-i', '100']
         self.reference_unit = unit
 
         metric_regex = rf'^{self.message_size}\s+(?P<metric_val>\S+)'
@@ -122,18 +122,11 @@ class OsuSameNumaNode(OsuBwLatencyBenchmarkBase):
 
       # These SLURM options are passed to srun
       self.job.launcher.options += [
+          # '--cpu-bind=verbose,map_ldom:0,0',
           '--cpu-bind=verbose,cores',
           '--mem-bind=local',
           '--distribution=block:block'
       ]
-
-      # Optional: export relevant OMPI MCA vars
-      self.env_vars = {
-          # 'OMPI_MCA_rmaps_base_mapping_policy': 'numa',
-          # 'OMPI_MCA_hwloc_base_binding_policy': 'core',
-          # 'OMPI_MCA_hwloc_base_mem_bind_policy': 'bind',
-          'OMPI_MCA_hwloc_base_report_bindings': '1'
-      }
 
     # --- Set specific reference values ---
     # @run_before('performance')
@@ -166,14 +159,16 @@ class OsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
     @run_before('run')
     def set_mpi_binding(self):
         self.job.launcher.options += [
-            # '--cpu-bind=cores',
             '--cpu-bind=verbose,cores',
-            # '--cpu-bind=map_ldom:0,0',
             '--mem-bind=local',
             '--distribution=block:block'
         ]
 
-        self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
+        self.env_vars = {
+            'OMPI_MCA_rmaps_base_mapping_policy': 'numa:PE=1',
+            'OMPI_MCA_hwloc_base_binding_policy': 'numa',
+            'OMPI_MCA_hwloc_base_report_bindings': '1'
+        }
 
     # @run_before('performance')
     # def set_references(self):
@@ -197,15 +192,10 @@ class OsuDifferentSockets(OsuBwLatencyBenchmarkBase):
     def set_mpi_binding(self):
          # These SLURM options are passed to srun
         self.job.launcher.options += [
-            '--ntasks-per-socket=1',
             '--cpu-bind=verbose,cores',
             '--mem-bind=local',
-            '--distribution=cyclic:cyclic'
+            '--distribution=block:cyclic'
         ]
-
-        # self.env_vars['OMPI_MCA_rmaps_base_mapping_policy'] = 'socket'
-        # self.env_vars['OMPI_MCA_hwloc_base_binding_policy'] = 'core'
-        self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
 
 
 
@@ -226,5 +216,3 @@ class OsuDifferentNodes(OsuBwLatencyBenchmarkBase):
         self.job.launcher.options += [
             '--nodes=2'
         ]
-
-        self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'

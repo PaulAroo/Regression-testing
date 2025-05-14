@@ -14,7 +14,7 @@ site_configuration = {
           'descr': 'Iris Skylake compute nodes via batch partition',
           'scheduler': 'slurm',
           'launcher': 'srun',
-          'access': ['--partition=batch', '--qos=normal', '-C skylake', '--time=0-00:05:00'],
+          'access': ['--partition=batch', '--qos=normal', '-C skylake', '--time=0-00:10:00'],
           'environs': ['foss-2023b'],
           'max_jobs': 8, # 8? probably should be a diff number
           'sched_options': {

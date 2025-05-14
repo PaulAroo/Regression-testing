@@ -75,12 +75,6 @@ class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
     def set_executable_path(self):
         '''Sets the full path to the executable using the build fixture.'''
         exec_name = self.benchmark_info[0]
-        # self.executable = os.path.join(self.osu_binaries.stagedir,
-        #                                self.osu_binaries.build_prefix, 'c',
-        #                                'mpi', 'pt2pt', 'standard', exec_name)
-
-        # if not os.path.exists(self.executable):
-        #     raise RuntimeError(f"Executable not found at: {self.executable}")
         self.modules = self.osu_bins.generated_modules
         self.executable = exec_name
 
@@ -98,7 +92,7 @@ class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
         else:
             raise ValueError(f'Unknown benchmark metric: {bench_metric}')
 
-        self.executable_opts = ['-m', f'{self.message_size}:{self.message_size}']
+        self.executable_opts = ['-m', f'{self.message_size}:{self.message_size}', '-x', '10', '-i', '100']
         self.reference_unit = unit
 
         metric_regex = rf'^{self.message_size}\s+(?P<metric_val>\S+)'
