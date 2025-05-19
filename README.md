@@ -29,5 +29,5 @@ module load devel/ReFrame/4.7.4-GCCcore-13.2.0
 
 5. Run the test
 ```sh
-reframe --config-file config/ulhpc.py --checkpath reframe_tests/osu_build_source.py --run
+reframe --config-file config/ulhpc.py --checkpath reframe_tests/osu_build_source.py --run --performance-report
 ```
