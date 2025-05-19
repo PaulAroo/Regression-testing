@@ -1,32 +1,11 @@
 
 import reframe as rfm
 import reframe.utility.sanity as sn
-import os
 
 # ============================================================================
-#  Part 1: Compilation Test for OSU Micro-Benchmarks from Source
+#  Part 1: Compilation Test for OSU Micro-Benchmarks using EESSI
 # ============================================================================
 
-class OsuBuildSource(rfm.CompileOnlyRegressionTest):
-    '''Fixture for building the OSU benchmarks'''
-
-    descr = 'Build OSU Micro-Benchmarks 7.2 from source using foss/2023b'
-
-    # --- Build configuration ---
-    build_system = 'Autotools'
-    build_prefix = variable(str)
-    version = variable(str, value='7.2')
-
-    @run_before('compile')
-    def prepare_build(self):
-      osu_file_name = f'osu-micro-benchmarks-{self.version}.tar.gz'
-      self.build_prefix = osu_file_name[:-7]
-      self.prebuild_cmds += [
-        f'curl -LJO http://mvapich.cse.ohio-state.edu/download/mvapich/{osu_file_name}',
-        f'tar xzf {osu_file_name}',
-        f'cd {self.build_prefix}'
-      ]
-      self.build_system.max_concurrency = 8
 
 class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
     '''Base class for OSU Point-to-Point benchmark tests (osu_latency, osu_bw).'''
@@ -42,26 +21,25 @@ class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
     exclusive_access = True
 
     # --- Parameter to select the specific pt2pt benchmark ---
+    # benchmark_info: tuple(executable_name_suffix, metric_name)
     benchmark_info = parameter([
         ('osu_bw', 'bandwidth'),
         ('osu_latency', 'latency')
     ], fmt=lambda x: x[0], loggable=True) # Log only the executable name suffix
 
     # --- Fixture Dependency ---
-    osu_binaries = fixture(OsuBuildSource, scope='environment')
 
     @run_before('run')
     def set_executable_path(self):
-        '''Sets the full path to the executable using the build fixture.'''
-        exec_name = self.benchmark_info[0]
-        self.executable = os.path.join(self.osu_binaries.stagedir,
-                                       self.osu_binaries.build_prefix, 'c',
-                                       'mpi', 'pt2pt', 'standard', exec_name)
+        '''Load required modules and set the full path to the executable'''
 
-        # export relevant OMPI MCA vars
-        self.env_vars = {
-            'OMPI_MCA_hwloc_base_report_bindings': '1'
-        }
+        self.prerun_cmds += [
+            'module load EESSI',
+            'module load OSU-Micro-Benchmarks/7.2-gompi-2023b'
+        ]
+
+        exec_name = self.benchmark_info[0]
+        self.executable = exec_name
 
     @run_before('setup')
     def setup_executable_options_and_perf(self):
@@ -107,7 +85,7 @@ class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
             }
 
 @rfm.simple_test
-class OsuSameNumaNode(OsuBwLatencyBenchmarkBase):
+class EESSIOsuSameNumaNode(OsuBwLatencyBenchmarkBase):
     descr = 'OSU Point-to-Point Benchmark Run'
 
     # --- MPI Binding ---
@@ -116,11 +94,18 @@ class OsuSameNumaNode(OsuBwLatencyBenchmarkBase):
 
       # These SLURM options are passed to srun
       self.job.launcher.options += [
-          # '--cpu-bind=verbose,map_ldom:0,0',
           '--cpu-bind=verbose,cores',
           '--mem-bind=local',
           '--distribution=block:block'
       ]
+
+      # Optional: export relevant OMPI MCA vars
+      self.env_vars = {
+          # 'OMPI_MCA_rmaps_base_mapping_policy': 'numa',
+          # 'OMPI_MCA_hwloc_base_binding_policy': 'core',
+          # 'OMPI_MCA_hwloc_base_mem_bind_policy': 'bind',
+          'OMPI_MCA_hwloc_base_report_bindings': '1'
+      }
 
     # --- Set specific reference values ---
     # @run_before('performance')
@@ -143,7 +128,7 @@ class OsuSameNumaNode(OsuBwLatencyBenchmarkBase):
 # Test Case: Same Physical Socket, Different NUMA Nodes (Targeted for Aion)
 # ============================================================================
 @rfm.simple_test
-class OsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
+class EESSIOsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
     descr = 'OSU Pt2Pt: Same Socket, Different NUMA Nodes (Aion Specific)'
 
     # --- Target only Aion for this specific test ---
@@ -153,16 +138,14 @@ class OsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
     @run_before('run')
     def set_mpi_binding(self):
         self.job.launcher.options += [
+            # '--cpu-bind=cores',
             '--cpu-bind=verbose,cores',
+            # '--cpu-bind=map_ldom:0,0',
             '--mem-bind=local',
             '--distribution=block:block'
         ]
 
-        self.env_vars = {
-            'OMPI_MCA_rmaps_base_mapping_policy': 'numa:PE=1',
-            'OMPI_MCA_hwloc_base_binding_policy': 'numa',
-            'OMPI_MCA_hwloc_base_report_bindings': '1'
-        }
+        self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
 
     # @run_before('performance')
     # def set_references(self):
@@ -178,7 +161,7 @@ class OsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
 # ============================================================================
 
 @rfm.simple_test
-class OsuDifferentSockets(OsuBwLatencyBenchmarkBase):
+class EESSIOsuDifferentSockets(OsuBwLatencyBenchmarkBase):
     descr = 'OSU Pt2Pt: Same Node, Different Sockets'
 
     # --- MPI Binding ---
@@ -186,10 +169,15 @@ class OsuDifferentSockets(OsuBwLatencyBenchmarkBase):
     def set_mpi_binding(self):
          # These SLURM options are passed to srun
         self.job.launcher.options += [
+            '--ntasks-per-socket=1',
             '--cpu-bind=verbose,cores',
             '--mem-bind=local',
-            '--distribution=block:cyclic'
+            '--distribution=cyclic:cyclic'
         ]
+
+        # self.env_vars['OMPI_MCA_rmaps_base_mapping_policy'] = 'socket'
+        # self.env_vars['OMPI_MCA_hwloc_base_binding_policy'] = 'core'
+        self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
 
 
 
@@ -198,7 +186,7 @@ class OsuDifferentSockets(OsuBwLatencyBenchmarkBase):
 # ============================================================================
 
 @rfm.simple_test
-class OsuDifferentNodes(OsuBwLatencyBenchmarkBase):
+class EESSIOsuDifferentNodes(OsuBwLatencyBenchmarkBase):
     descr = 'OSU Pt2Pt: Same Node, Different Sockets'
 
     num_tasks_per_node = 1
@@ -210,3 +198,5 @@ class OsuDifferentNodes(OsuBwLatencyBenchmarkBase):
         self.job.launcher.options += [
             '--nodes=2'
         ]
+
+        self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'

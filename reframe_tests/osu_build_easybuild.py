@@ -1,11 +1,4 @@
 
-
-# TODO:
-# - configure warmup runs
-# - set references for each test
-# - FIX: INCORRECT BINDINGS (OsuDifferentSockets, OsuSameSocketDifferentNuma)
-
-
 import reframe as rfm
 import reframe.utility.sanity as sn
 import os
