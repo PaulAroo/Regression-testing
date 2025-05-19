@@ -34,6 +34,12 @@ module load devel/ReFrame/4.7.4-GCCcore-13.2.0
 ```sh
 reframe --config-file config/ulhpc.py --checkpath reframe_tests/osu_build_source.py --run --performance-report
 ```
+```sh
+reframe --config-file config/ulhpc.py --checkpath reframe_tests/osu_build_easybuild.py --run --performance-report
+```
+```sh
+reframe --config-file config/ulhpc.py --checkpath reframe_tests/osu_eessi.py --run --performance-report
+```
 
 ### Relevant docs
 - [EESSI-OSU-Micro-Benchmarks](https://www.eessi.io/docs/available_software/detail/OSU-Micro-Benchmarks/)
