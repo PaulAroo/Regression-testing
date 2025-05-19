@@ -2,8 +2,11 @@
 
 🚧 WIP - Work In Progress 👨🏽‍💻
 
-see [project description](./project_description.md)
+[ ] set references for each test
+[ ] FIX: INCORRECT BINDINGS (OsuSameSocketDifferentNuma)
+[ ] Merge tests into a single script? (use a parameter for the different compilation options)
 
+see [project description](./project_description.md)
 
 ## Running Tests
 
