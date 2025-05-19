@@ -2,9 +2,9 @@
 
 🚧 WIP - Work In Progress 👨🏽‍💻
 
-[ ] set references for each test
-[ ] FIX: INCORRECT BINDINGS (OsuSameSocketDifferentNuma)
-[ ] Merge tests into a single script? (use a parameter for the different compilation options)
+- [ ] Set references for each test
+- [ ] FIX: INCORRECT BINDINGS (OsuSameSocketDifferentNuma)
+- [ ] Merge tests into a single script? (use a parameter for the different compilation options)
 
 see [project description](./project_description.md)
 
@@ -38,3 +38,6 @@ reframe --config-file config/ulhpc.py --checkpath reframe_tests/osu_build_source
 ### Relevant docs
 - [EESSI-OSU-Micro-Benchmarks](https://www.eessi.io/docs/available_software/detail/OSU-Micro-Benchmarks/)
 - [Reframe - (Testing Framework)](https://reframe-hpc.readthedocs.io/en/stable/index.html)
+
+### Performance Report (sample)
+![performance report sample](/sample_perf_report.png)
