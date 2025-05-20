@@ -115,7 +115,7 @@ class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
             }
 
 @rfm.simple_test
-class OsuSameNumaNode(OsuBwLatencyBenchmarkBase):
+class EasyBuildOsuSameNumaNode(OsuBwLatencyBenchmarkBase):
     descr = 'OSU Point-to-Point Benchmark Run'
 
     # --- MPI Binding ---
@@ -129,104 +129,89 @@ class OsuSameNumaNode(OsuBwLatencyBenchmarkBase):
           '--distribution=block:block'
       ]
 
-      # Optional: export relevant OMPI MCA vars
-      self.env_vars = {
-          # 'OMPI_MCA_rmaps_base_mapping_policy': 'numa',
-          # 'OMPI_MCA_hwloc_base_binding_policy': 'core',
-          # 'OMPI_MCA_hwloc_base_mem_bind_policy': 'bind',
-          'OMPI_MCA_hwloc_base_report_bindings': '1'
-      }
+      self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
 
-#     # --- Set specific reference values ---
-#     # @run_before('performance')
-#     # def set_references(self):
-#     #   # This method overrides the default set in the base class
-#     #   metric = self.benchmark_info[1] # 'latency' or 'bandwidth'
-#     #   references = {
-#     #     'latency': {
-#     #       '*': {'latency': (1.8, -0.1, 0.5, 'us')} # Placeholder for latency
-#     #     },
-#     #     'bandwidth': {
-#     #       '*': {'bandwidth': (15000.0, -0.1, None, 'MB/s')} # Placeholder for bandwidth
-#     #     }
-#     #   }
-#     #   self.reference = references[metric]
+    # --- Set specific reference values ---
+    # @run_before('performance')
+    # def set_references(self):
+    #   # This method overrides the default set in the base class
+    #   metric = self.benchmark_info[1] # 'latency' or 'bandwidth'
+    #   references = {
+    #     'latency': {
+    #       '*': {'latency': (1.8, -0.1, 0.5, 'us')} # Placeholder for latency
+    #     },
+    #     'bandwidth': {
+    #       '*': {'bandwidth': (15000.0, -0.1, None, 'MB/s')} # Placeholder for bandwidth
+    #     }
+    #   }
+    #   self.reference = references[metric]
 
 
 
-# # ============================================================================
-# # Test Case: Same Physical Socket, Different NUMA Nodes (Targeted for Aion)
-# # ============================================================================
-# @rfm.simple_test
-# class OsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
-#     descr = 'OSU Pt2Pt: Same Socket, Different NUMA Nodes (Aion Specific)'
+# ============================================================================
+# Test Case: Same Physical Socket, Different NUMA Nodes (Targeted for Aion)
+# ============================================================================
+@rfm.simple_test
+class EasyBuildOsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
+    descr = 'OSU Pt2Pt: Same Socket, Different NUMA Nodes (Aion Specific)'
 
-#     # --- Target only Aion for this specific test ---
-#     valid_systems = ['aion:batch']
+    # --- Target only Aion for this specific test ---
+    valid_systems = ['aion:batch']
 
-#     # --- MPI Binding ---
-#     @run_before('run')
-#     def set_mpi_binding(self):
-#         self.job.launcher.options += [
-#             # '--cpu-bind=cores',
-#             '--cpu-bind=verbose,cores',
-#             # '--cpu-bind=map_ldom:0,0',
-#             '--mem-bind=local',
-#             '--distribution=block:block'
-#         ]
+    # --- MPI Binding ---
+    @run_before('run')
+    def set_mpi_binding(self):
+        self.job.launcher.options += [
+            '--cpu-bind=verbose,map_cpu:0,16',
+            '--mem-bind=local',
+        ]
 
-#         self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
+        self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
 
-#     # @run_before('performance')
-#     # def set_references(self):
-#     #     metric = self.benchmark_info[1]
-#     #     if metric == 'latency':
-#     #         self.reference = {'*': {'latency': (1.5, -0.1, 0.5, 'us')}}
-#     #     elif metric == 'bandwidth':
-#     #         self.reference = {'*': {'bandwidth': (14000.0, -0.1, None, 'MB/s')}}
+    # @run_before('performance')
+    # def set_references(self):
+    #     metric = self.benchmark_info[1]
+    #     if metric == 'latency':
+    #         self.reference = {'*': {'latency': (1.5, -0.1, 0.5, 'us')}}
+    #     elif metric == 'bandwidth':
+    #         self.reference = {'*': {'bandwidth': (14000.0, -0.1, None, 'MB/s')}}
 
+# ============================================================================
+# Test Case: Same Compute Node, Different Physical Sockets
+# ============================================================================
 
-# # ============================================================================
-# # Test Case: Same Compute Node, Different Physical Sockets
-# # ============================================================================
+@rfm.simple_test
+class EasyBuildOsuDifferentSockets(OsuBwLatencyBenchmarkBase):
+    descr = 'OSU Pt2Pt: Same Node, Different Sockets'
 
-# @rfm.simple_test
-# class OsuDifferentSockets(OsuBwLatencyBenchmarkBase):
-#     descr = 'OSU Pt2Pt: Same Node, Different Sockets'
+    # --- MPI Binding ---
+    @run_before('run')
+    def set_mpi_binding(self):
+         # These SLURM options are passed to srun
+        self.job.launcher.options += [
+            '--ntasks-per-socket=1',
+            '--cpu-bind=verbose,cores',
+            '--mem-bind=local',
+            '--distribution=cyclic:cyclic'
+        ]
+        self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
 
-#     # --- MPI Binding ---
-#     @run_before('run')
-#     def set_mpi_binding(self):
-#          # These SLURM options are passed to srun
-#         self.job.launcher.options += [
-#             '--ntasks-per-socket=1',
-#             '--cpu-bind=verbose,cores',
-#             '--mem-bind=local',
-#             '--distribution=cyclic:cyclic'
-#         ]
+# ============================================================================
+# Test Case: 2 processes are running on different nodes.
+# ============================================================================
 
-#         # self.env_vars['OMPI_MCA_rmaps_base_mapping_policy'] = 'socket'
-#         # self.env_vars['OMPI_MCA_hwloc_base_binding_policy'] = 'core'
-#         self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
+@rfm.simple_test
+class EasyBuildOsuDifferentNodes(OsuBwLatencyBenchmarkBase):
+    descr = 'OSU Pt2Pt: Same Node, Different Sockets'
 
+    num_tasks_per_node = 1
 
+    # --- MPI Binding ---
+    @run_before('run')
+    def set_mpi_binding(self):
 
-# # ============================================================================
-# # Test Case: 2 processes are running on different nodes.
-# # ============================================================================
+        self.job.launcher.options += [
+            '--nodes=2'
+        ]
 
-# @rfm.simple_test
-# class OsuDifferentNodes(OsuBwLatencyBenchmarkBase):
-#     descr = 'OSU Pt2Pt: Same Node, Different Sockets'
-
-#     num_tasks_per_node = 1
-
-#     # --- MPI Binding ---
-#     @run_before('run')
-#     def set_mpi_binding(self):
-
-#         self.job.launcher.options += [
-#             '--nodes=2'
-#         ]
-
-#         self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
+        self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'

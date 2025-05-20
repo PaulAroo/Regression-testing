@@ -116,7 +116,6 @@ class OsuSameNumaNode(OsuBwLatencyBenchmarkBase):
 
       # These SLURM options are passed to srun
       self.job.launcher.options += [
-          # '--cpu-bind=verbose,map_ldom:0,0',
           '--cpu-bind=verbose,cores',
           '--mem-bind=local',
           '--distribution=block:block'
@@ -153,16 +152,9 @@ class OsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
     @run_before('run')
     def set_mpi_binding(self):
         self.job.launcher.options += [
-            '--cpu-bind=verbose,cores',
+            '--cpu-bind=verbose,map_cpu:0,16',
             '--mem-bind=local',
-            '--distribution=block:block'
         ]
-
-        self.env_vars = {
-            'OMPI_MCA_rmaps_base_mapping_policy': 'numa:PE=1',
-            'OMPI_MCA_hwloc_base_binding_policy': 'numa',
-            'OMPI_MCA_hwloc_base_report_bindings': '1'
-        }
 
     # @run_before('performance')
     # def set_references(self):
@@ -171,7 +163,6 @@ class OsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
     #         self.reference = {'*': {'latency': (1.5, -0.1, 0.5, 'us')}}
     #     elif metric == 'bandwidth':
     #         self.reference = {'*': {'bandwidth': (14000.0, -0.1, None, 'MB/s')}}
-
 
 # ============================================================================
 # Test Case: Same Compute Node, Different Physical Sockets
@@ -186,12 +177,11 @@ class OsuDifferentSockets(OsuBwLatencyBenchmarkBase):
     def set_mpi_binding(self):
          # These SLURM options are passed to srun
         self.job.launcher.options += [
+            '--ntasks-per-socket=1',
             '--cpu-bind=verbose,cores',
             '--mem-bind=local',
-            '--distribution=block:cyclic'
+            '--distribution=cyclic:cyclic'
         ]
-
-
 
 # ============================================================================
 # Test Case: 2 processes are running on different nodes.

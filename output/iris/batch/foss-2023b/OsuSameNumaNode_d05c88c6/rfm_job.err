@@ -1,6 +1,0 @@
-cpu-bind=MASK - iris-142, task  0  0 [4088273]: mask 0x1 set
-cpu-bind=MASK - iris-142, task  1  1 [4088274]: mask 0x4 set
-[iris-142:4088273] MCW rank 0 bound to socket 0[core 0[hwt 0]]: [B/././././././././././././.][./././././././././././././.]
-[iris-142:4088273] MCW rank 0 bound to socket 0[core 0[hwt 0]]: [B/././././././././././././.][./././././././././././././.]
-[iris-142:4088274] MCW rank 1 bound to socket 0[core 1[hwt 0]]: [./B/./././././././././././.][./././././././././././././.]
-[iris-142:4088274] MCW rank 1 bound to socket 0[core 1[hwt 0]]: [./B/./././././././././././.][./././././././././././././.]

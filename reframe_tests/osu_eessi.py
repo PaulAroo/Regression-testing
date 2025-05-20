@@ -6,7 +6,6 @@ import reframe.utility.sanity as sn
 #  Part 1: Compilation Test for OSU Micro-Benchmarks using EESSI
 # ============================================================================
 
-
 class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
     '''Base class for OSU Point-to-Point benchmark tests (osu_latency, osu_bw).'''
 
@@ -27,8 +26,6 @@ class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
         ('osu_latency', 'latency')
     ], fmt=lambda x: x[0], loggable=True) # Log only the executable name suffix
 
-    # --- Fixture Dependency ---
-
     @run_before('run')
     def set_executable_path(self):
         '''Load required modules and set the full path to the executable'''
@@ -40,6 +37,11 @@ class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
 
         exec_name = self.benchmark_info[0]
         self.executable = exec_name
+
+        # export relevant OMPI MCA vars
+        self.env_vars = {
+            'OMPI_MCA_hwloc_base_report_bindings': '1'
+        }
 
     @run_before('setup')
     def setup_executable_options_and_perf(self):
@@ -99,14 +101,6 @@ class EESSIOsuSameNumaNode(OsuBwLatencyBenchmarkBase):
           '--distribution=block:block'
       ]
 
-      # Optional: export relevant OMPI MCA vars
-      self.env_vars = {
-          # 'OMPI_MCA_rmaps_base_mapping_policy': 'numa',
-          # 'OMPI_MCA_hwloc_base_binding_policy': 'core',
-          # 'OMPI_MCA_hwloc_base_mem_bind_policy': 'bind',
-          'OMPI_MCA_hwloc_base_report_bindings': '1'
-      }
-
     # --- Set specific reference values ---
     # @run_before('performance')
     # def set_references(self):
@@ -122,8 +116,6 @@ class EESSIOsuSameNumaNode(OsuBwLatencyBenchmarkBase):
     #   }
     #   self.reference = references[metric]
 
-
-
 # ============================================================================
 # Test Case: Same Physical Socket, Different NUMA Nodes (Targeted for Aion)
 # ============================================================================
@@ -138,14 +130,9 @@ class EESSIOsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
     @run_before('run')
     def set_mpi_binding(self):
         self.job.launcher.options += [
-            # '--cpu-bind=cores',
-            '--cpu-bind=verbose,cores',
-            # '--cpu-bind=map_ldom:0,0',
+            '--cpu-bind=verbose,map_cpu:0,16',
             '--mem-bind=local',
-            '--distribution=block:block'
         ]
-
-        self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
 
     # @run_before('performance')
     # def set_references(self):
@@ -154,7 +141,6 @@ class EESSIOsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
     #         self.reference = {'*': {'latency': (1.5, -0.1, 0.5, 'us')}}
     #     elif metric == 'bandwidth':
     #         self.reference = {'*': {'bandwidth': (14000.0, -0.1, None, 'MB/s')}}
-
 
 # ============================================================================
 # Test Case: Same Compute Node, Different Physical Sockets
@@ -175,12 +161,6 @@ class EESSIOsuDifferentSockets(OsuBwLatencyBenchmarkBase):
             '--distribution=cyclic:cyclic'
         ]
 
-        # self.env_vars['OMPI_MCA_rmaps_base_mapping_policy'] = 'socket'
-        # self.env_vars['OMPI_MCA_hwloc_base_binding_policy'] = 'core'
-        self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
-
-
-
 # ============================================================================
 # Test Case: 2 processes are running on different nodes.
 # ============================================================================
@@ -198,5 +178,3 @@ class EESSIOsuDifferentNodes(OsuBwLatencyBenchmarkBase):
         self.job.launcher.options += [
             '--nodes=2'
         ]
-
-        self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
