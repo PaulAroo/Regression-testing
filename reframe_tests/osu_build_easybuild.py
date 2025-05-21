@@ -132,21 +132,21 @@ class EasyBuildOsuSameNumaNode(OsuBwLatencyBenchmarkBase):
       self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
 
     # --- Set specific reference values ---
-    # @run_before('performance')
-    # def set_references(self):
-    #   # This method overrides the default set in the base class
-    #   metric = self.benchmark_info[1] # 'latency' or 'bandwidth'
-    #   references = {
-    #     'latency': {
-    #       '*': {'latency': (1.8, -0.1, 0.5, 'us')} # Placeholder for latency
-    #     },
-    #     'bandwidth': {
-    #       '*': {'bandwidth': (15000.0, -0.1, None, 'MB/s')} # Placeholder for bandwidth
-    #     }
-    #   }
-    #   self.reference = references[metric]
-
-
+    @run_before('performance')
+    def set_references(self):
+      # This method overrides the default set in the base class
+      metric = self.benchmark_info[1] # 'latency' or 'bandwidth'
+      references = {
+        'latency': {
+          'aion:batch': {'latency': (2.3, -0.1, 0.5, 'us')},
+          'iris:batch': {'latency': (1.8, -0.1, 0.5, 'us')},
+        },
+        'bandwidth': {
+          'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
+          'iris:batch': {'bandwidth': (15000.0, -0.1, None, 'MB/s')},
+        }
+      }
+      self.reference = references[metric]
 
 # ============================================================================
 # Test Case: Same Physical Socket, Different NUMA Nodes (Targeted for Aion)
@@ -168,13 +168,22 @@ class EasyBuildOsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
 
         self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
 
-    # @run_before('performance')
-    # def set_references(self):
-    #     metric = self.benchmark_info[1]
-    #     if metric == 'latency':
-    #         self.reference = {'*': {'latency': (1.5, -0.1, 0.5, 'us')}}
-    #     elif metric == 'bandwidth':
-    #         self.reference = {'*': {'bandwidth': (14000.0, -0.1, None, 'MB/s')}}
+    # --- Set specific reference values ---
+    @run_before('performance')
+    def set_references(self):
+      # This method overrides the default set in the base class
+      metric = self.benchmark_info[1] # 'latency' or 'bandwidth'
+      references = {
+        'latency': {
+          'aion:batch': {'latency': (3.9, -0.1, 0.5, 'us')},
+          'iris:batch': {'latency': (1.8, -0.1, 0.5, 'us')},
+        },
+        'bandwidth': {
+          'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
+          'iris:batch': {'bandwidth': (15000.0, -0.1, None, 'MB/s')},
+        }
+      }
+      self.reference = references[metric]
 
 # ============================================================================
 # Test Case: Same Compute Node, Different Physical Sockets
@@ -196,6 +205,23 @@ class EasyBuildOsuDifferentSockets(OsuBwLatencyBenchmarkBase):
         ]
         self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
 
+    # --- Set specific reference values ---
+    @run_before('performance')
+    def set_references(self):
+      # This method overrides the default set in the base class
+      metric = self.benchmark_info[1] # 'latency' or 'bandwidth'
+      references = {
+        'latency': {
+          'aion:batch': {'latency': (3.9, -0.1, 0.5, 'us')},
+          'iris:batch': {'latency': (1.8, -0.1, 0.5, 'us')},
+        },
+        'bandwidth': {
+          'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
+          'iris:batch': {'bandwidth': (15000.0, -0.1, None, 'MB/s')},
+        }
+      }
+      self.reference = references[metric]
+
 # ============================================================================
 # Test Case: 2 processes are running on different nodes.
 # ============================================================================
@@ -215,3 +241,20 @@ class EasyBuildOsuDifferentNodes(OsuBwLatencyBenchmarkBase):
         ]
 
         self.env_vars['OMPI_MCA_hwloc_base_report_bindings'] = '1'
+
+    # --- Set specific reference values ---
+    @run_before('performance')
+    def set_references(self):
+      # This method overrides the default set in the base class
+      metric = self.benchmark_info[1] # 'latency' or 'bandwidth'
+      references = {
+        'latency': {
+          'aion:batch': {'latency': (4.0, -0.1, 0.5, 'us')},
+          'iris:batch': {'latency': (1.8, -0.1, 0.5, 'us')},
+        },
+        'bandwidth': {
+          'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
+          'iris:batch': {'bandwidth': (15000.0, -0.1, None, 'MB/s')},
+        }
+      }
+      self.reference = references[metric]
