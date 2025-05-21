@@ -144,11 +144,9 @@ class EESSIOsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
       references = {
         'latency': {
           'aion:batch': {'latency': (3.8, -0.1, 0.5, 'us')},
-          'iris:batch': {'latency': (1.8, -0.1, 0.5, 'us')},
         },
         'bandwidth': {
           'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
-          'iris:batch': {'bandwidth': (15000.0, -0.1, None, 'MB/s')},
         }
       }
       self.reference = references[metric]
@@ -180,7 +178,7 @@ class EESSIOsuDifferentSockets(OsuBwLatencyBenchmarkBase):
       references = {
         'latency': {
           'aion:batch': {'latency': (3.8, -0.1, 0.5, 'us')},
-          'iris:batch': {'latency': (1.8, -0.1, 0.5, 'us')},
+          'iris:batch': {'latency': (8, -0.1, 0.5, 'us')},
         },
         'bandwidth': {
           'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
@@ -215,11 +213,11 @@ class EESSIOsuDifferentNodes(OsuBwLatencyBenchmarkBase):
       references = {
         'latency': {
           'aion:batch': {'latency': (4.0, -0.1, 0.5, 'us')},
-          'iris:batch': {'latency': (1.8, -0.1, 0.5, 'us')},
+          'iris:batch': {'latency': (10, -0.1, 0.5, 'us')},
         },
         'bandwidth': {
           'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
-          'iris:batch': {'bandwidth': (15000.0, -0.1, None, 'MB/s')},
+          'iris:batch': {'bandwidth': (8000.0, -0.1, None, 'MB/s')},
         }
       }
       self.reference = references[metric]

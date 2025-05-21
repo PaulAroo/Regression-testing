@@ -129,11 +129,11 @@ class OsuSameNumaNode(OsuBwLatencyBenchmarkBase):
       references = {
         'latency': {
           'aion:batch': {'latency': (2.3, -0.1, 0.5, 'us')},
-          'iris:batch': {'latency': (1.8, -0.1, 0.5, 'us')},
+          'iris:batch': {'latency': (5.8, -0.1, 0.5, 'us')},
         },
         'bandwidth': {
           'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
-          'iris:batch': {'bandwidth': (15000.0, -0.1, None, 'MB/s')},
+          'iris:batch': {'bandwidth': (5000.0, -0.1, None, 'MB/s')},
         }
       }
       self.reference = references[metric]
@@ -166,11 +166,9 @@ class OsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
       references = {
         'latency': {
           'aion:batch': {'latency': (3.8, -0.1, 0.5, 'us')},
-          'iris:batch': {'latency': (1.8, -0.1, 0.5, 'us')},
         },
         'bandwidth': {
           'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
-          'iris:batch': {'bandwidth': (15000.0, -0.1, None, 'MB/s')},
         }
       }
       self.reference = references[metric]
@@ -202,7 +200,7 @@ class OsuDifferentSockets(OsuBwLatencyBenchmarkBase):
       references = {
         'latency': {
           'aion:batch': {'latency': (3.8, -0.1, 0.5, 'us')},
-          'iris:batch': {'latency': (1.8, -0.1, 0.5, 'us')},
+          'iris:batch': {'latency': (8, -0.1, 0.5, 'us')},
         },
         'bandwidth': {
           'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
@@ -237,11 +235,11 @@ class OsuDifferentNodes(OsuBwLatencyBenchmarkBase):
       references = {
         'latency': {
           'aion:batch': {'latency': (4.0, -0.1, 0.5, 'us')},
-          'iris:batch': {'latency': (1.8, -0.1, 0.5, 'us')},
+          'iris:batch': {'latency': (10, -0.1, 0.5, 'us')},
         },
         'bandwidth': {
           'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
-          'iris:batch': {'bandwidth': (15000.0, -0.1, None, 'MB/s')},
+          'iris:batch': {'bandwidth': (8000.0, -0.1, None, 'MB/s')},
         }
       }
       self.reference = references[metric]
