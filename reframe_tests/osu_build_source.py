@@ -128,12 +128,12 @@ class OsuSameNumaNode(OsuBwLatencyBenchmarkBase):
       metric = self.benchmark_info[1] # 'latency' or 'bandwidth'
       references = {
         'latency': {
-          'aion:batch': {'latency': (2.3, -0.1, 0.5, 'us')},
-          'iris:batch': {'latency': (5.8, -0.1, 0.5, 'us')},
+          'aion:batch': {'latency': (1.0, -0.2, 0.2, 'us')},
+          'iris:batch': {'latency': (2.5, -0.2, 0.2, 'us')},
         },
         'bandwidth': {
-          'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
-          'iris:batch': {'bandwidth': (5000.0, -0.1, None, 'MB/s')},
+          'aion:batch': {'bandwidth': (12000.0, -0.2, 0.5, 'MB/s')},
+          'iris:batch': {'bandwidth': (4700, -0.2, 0.5, 'MB/s')},
         }
       }
       self.reference = references[metric]
@@ -165,10 +165,10 @@ class OsuSameSocketDifferentNuma(OsuBwLatencyBenchmarkBase):
       metric = self.benchmark_info[1] # 'latency' or 'bandwidth'
       references = {
         'latency': {
-          'aion:batch': {'latency': (3.8, -0.1, 0.5, 'us')},
+          'aion:batch': {'latency': (2.3, -0.2, 0.2, 'us')},
         },
         'bandwidth': {
-          'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
+          'aion:batch': {'bandwidth': (12000.0, -0.2, 0.5, 'MB/s')},
         }
       }
       self.reference = references[metric]
@@ -199,12 +199,12 @@ class OsuDifferentSockets(OsuBwLatencyBenchmarkBase):
       metric = self.benchmark_info[1] # 'latency' or 'bandwidth'
       references = {
         'latency': {
-          'aion:batch': {'latency': (3.8, -0.1, 0.5, 'us')},
-          'iris:batch': {'latency': (8, -0.1, 0.5, 'us')},
+          'aion:batch': {'latency': (2.3, -0.2, 0.2, 'us')},
+          'iris:batch': {'latency': (4.2, -0.2, 0.2, 'us')},
         },
         'bandwidth': {
-          'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
-          'iris:batch': {'bandwidth': (15000.0, -0.1, None, 'MB/s')},
+          'aion:batch': {'bandwidth': (12000.0, -0.2, 0.5, 'MB/s')},
+          'iris:batch': {'bandwidth': (4500.0, -0.2, 0.5, 'MB/s')},
         }
       }
       self.reference = references[metric]
@@ -234,12 +234,12 @@ class OsuDifferentNodes(OsuBwLatencyBenchmarkBase):
       metric = self.benchmark_info[1] # 'latency' or 'bandwidth'
       references = {
         'latency': {
-          'aion:batch': {'latency': (4.0, -0.1, 0.5, 'us')},
-          'iris:batch': {'latency': (10, -0.1, 0.5, 'us')},
+          'aion:batch': {'latency': (4.0, -0.2, 0.2, 'us')},
+          'iris:batch': {'latency': (7.2, -0.2, 0.2, 'us')},
         },
         'bandwidth': {
-          'aion:batch': {'bandwidth': (12000.0, -0.1, None, 'MB/s')},
-          'iris:batch': {'bandwidth': (8000.0, -0.1, None, 'MB/s')},
+          'aion:batch': {'bandwidth': (12000.0, -0.2, 0.5, 'MB/s')},
+          'iris:batch': {'bandwidth': (8000.0, -0.2, 0.5, 'MB/s')},
         }
       }
       self.reference = references[metric]
