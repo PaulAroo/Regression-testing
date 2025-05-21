@@ -77,7 +77,7 @@ class OsuBwLatencyBenchmarkBase(rfm.RunOnlyRegressionTest):
         else:
             raise ValueError(f'Unknown benchmark metric: {bench_metric}')
 
-        self.executable_opts = ['-m', f'{self.message_size}:{self.message_size}', '-x', '10', '-i', '100']
+        self.executable_opts = ['-m', f'{self.message_size}:{self.message_size}', '-x', '100', '-i', '1000']
         self.reference_unit = unit
 
         metric_regex = rf'^{self.message_size}\s+(?P<metric_val>\S+)'
